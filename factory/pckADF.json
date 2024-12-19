@@ -1,0 +1,9 @@
+{
+	"name": "pckADF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0b83e277-1d34-41a9-9597-57b406c498a8",
+		"tenantId": "818467cf-44b9-45a5-a41a-1ef924fcd795"
+	}
+}
