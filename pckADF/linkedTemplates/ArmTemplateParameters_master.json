@@ -1,0 +1,39 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "pckADF"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_password": {
+			"value": ""
+		},
+		"FileServer1_password": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_properties_typeProperties_server": {
+			"value": "pcksqlserver.database.windows.net"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_database": {
+			"value": "cloudtraining"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "pck"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"value": "//LAPTOP-5VQ2NFKL/SampleData"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"value": "//LAPTOP-5VQ2NFKL\\itspa"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
