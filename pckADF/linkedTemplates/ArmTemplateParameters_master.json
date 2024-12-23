@@ -14,6 +14,9 @@
 		"FileServer1_password": {
 			"value": ""
 		},
+		"SqlServer1_password": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"value": "pcksqlserver.database.windows.net"
 		},
@@ -28,6 +31,15 @@
 		},
 		"FileServer1_properties_typeProperties_userId": {
 			"value": "//LAPTOP-5VQ2NFKL\\itspa"
+		},
+		"SqlServer1_properties_typeProperties_server": {
+			"value": "LAPTOP-5VQ2NFKL"
+		},
+		"SqlServer1_properties_typeProperties_database": {
+			"value": "cloudtraining"
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "pck"
 		},
 		"containerUri": {
 			"value": ""
