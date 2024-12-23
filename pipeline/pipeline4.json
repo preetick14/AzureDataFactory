@@ -75,7 +75,7 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
-									"preCopyScript": "IF NOT EXISTS (SELECT * FROM DestinationDB WHERE name = 'Customer' AND xtype = 'U')\nBEGIN\n    Create table Customer\n\n(ID int,\n\nCustomer_Name varchar(max),\n\nSalary float\n\n)\n );\nEND\n",
+									"preCopyScript": "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name = 'Customer' AND xtype = 'U')\nBEGIN\n    CREATE TABLE dbo.Customer\n    (\n        ID INT,\n        Customer_Name VARCHAR(MAX),\n        Salary FLOAT\n    );\nEND\n",
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
 									"disableMetricsCollection": false
