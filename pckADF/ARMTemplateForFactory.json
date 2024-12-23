@@ -732,7 +732,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"expression": {
-								"value": "@and(equals(activity('Lookup1').output.Name, 'Customer'), equals(activity('Lookup1').output.Enabled, 1))",
+								"value": "@and(equals(activity('Lookup1').output.value[0].Name, 'Customer'), equals(activity('Lookup1').output.value[0].Enabled, 1))",
 								"type": "Expression"
 							},
 							"ifFalseActivities": [
