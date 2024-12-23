@@ -1,9 +1,9 @@
 {
-	"name": "pipeline2",
+	"name": "pipeline3",
 	"properties": {
 		"activities": [
 			{
-				"name": "forEach1",
+				"name": "IterateSQLTables",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
@@ -28,10 +28,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "select * from watermarktable where TableName  =  '@{item().TABLE_NAME}'",
-										"type": "Expression"
-									},
+									"sqlReaderQuery": "select * from watermarktable where TableName  =  '@{item().TABLE_NAME}'",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -55,16 +52,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "select MAX(@{item().WaterMark_Column}) as NewWatermarkvalue from @{item().TABLE_NAME}",
-										"type": "Expression"
-									},
+									"type": "SqlServerSource",
+									"sqlReaderQuery": "select MAX(@{item().WaterMark_Column}) as NewWatermarkvalue from @{item().TABLE_NAME}",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
 								"dataset": {
-									"referenceName": "sourcetables",
+									"referenceName": "SourceTables2",
 									"type": "DatasetReference"
 								}
 							}
@@ -96,24 +90,20 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
-										"type": "Expression"
-									},
+									"type": "SqlServerSource",
+									"sqlReaderQuery": "select * from @{item().TABLE_NAME} where @{item().WaterMark_Column} > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and @{item().WaterMark_Column} <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}'",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
+									"type": "AzureSqlSink",
+									"sqlWriterStoredProcedureName": {
+										"value": "@{item().StoredProcedureNameForMergeOperation}",
+										"type": "Expression"
 									},
-									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
-									}
+									"sqlWriterTableType": "@{item().TableType}",
+									"storedProcedureTableTypeParameterName": "@{item().TABLE_NAME}",
+									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
 								"translator": {
@@ -127,14 +117,17 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "sourcetables",
+									"referenceName": "SourceTables2",
 									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
 								{
-									"referenceName": "DelimitedText2",
-									"type": "DatasetReference"
+									"referenceName": "SinkDataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"SinkTableName": "@{item().TABLE_NAME}"
+									}
 								}
 							]
 						},
@@ -161,17 +154,11 @@
 								"storedProcedureName": "[dbo].[usp_write_watermark]",
 								"storedProcedureParameters": {
 									"LastModifiedtime": {
-										"value": {
-											"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}\n",
-											"type": "Expression"
-										},
+										"value": "@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkvalue}",
 										"type": "Datetime"
 									},
 									"TableName": {
-										"value": {
-											"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}\n",
-											"type": "Expression"
-										},
+										"value": "@{activity('LookupOldWaterMarkActivity').output.firstRow.TableName}",
 										"type": "String"
 									}
 								}
