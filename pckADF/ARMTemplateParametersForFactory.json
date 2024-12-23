@@ -11,6 +11,9 @@
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
+		"AzureSqlDatabase2_password": {
+			"value": ""
+		},
 		"FileServer1_password": {
 			"value": ""
 		},
@@ -24,6 +27,15 @@
 			"value": "cloudtraining"
 		},
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
+			"value": "pck"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_server": {
+			"value": "pcksqlserver.database.windows.net"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_database": {
+			"value": "DestinationDB"
+		},
+		"AzureSqlDatabase2_properties_typeProperties_userName": {
 			"value": "pck"
 		},
 		"FileServer1_properties_typeProperties_host": {
