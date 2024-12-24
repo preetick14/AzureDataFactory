@@ -8,6 +8,9 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
@@ -19,6 +22,9 @@
 		},
 		"SqlServer1_password": {
 			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://pckstorageaccount.dfs.core.windows.net/"
 		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"value": "pcksqlserver.database.windows.net"
