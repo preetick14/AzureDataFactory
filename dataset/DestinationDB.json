@@ -5,12 +5,20 @@
 			"referenceName": "AzureSqlDatabase2",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"tablename": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
 			"schema": "",
-			"table": "dbo.Customer"
+			"table": {
+				"value": "@dataset().tablename",
+				"type": "Expression"
+			}
 		}
 	}
 }

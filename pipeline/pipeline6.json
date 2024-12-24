@@ -64,7 +64,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Filter1').output.Name",
+						"value": "@activity('Filter1').output",
 						"type": "Expression"
 					},
 					"activities": [
@@ -81,8 +81,52 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AzureSqlSourceTable",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@item().Name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DestinationDB",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@item().Name",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
