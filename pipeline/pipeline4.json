@@ -40,7 +40,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@and(equals(activity('Lookup1').output.value[0].Name, 'Customer'), equals(activity('Lookup1').output.value[0].Enabled, 1))",
+						"value": "@equals(activity('Lookup1').output.firstRow.Enabled, 1)\n\n",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
@@ -107,6 +107,14 @@
 				}
 			}
 		],
+		"variables": {
+			"@item().name": {
+				"type": "Array"
+			},
+			"filename": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
