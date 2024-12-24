@@ -113,6 +113,12 @@
 			},
 			"filename": {
 				"type": "String"
+			},
+			"isEnabled": {
+				"type": "String"
+			},
+			"isEnabled1": {
+				"type": "Integer"
 			}
 		},
 		"annotations": []
