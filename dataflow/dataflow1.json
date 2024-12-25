@@ -97,7 +97,7 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> customerpurchases",
 				"Personaldetails derive(Fullname = concat(FirstName, ' ', LastName) ) ~> derivedColumn1",
-				"derivedColumn1 filter(ERROR_FUNCTION('item().IsActive == true && item()Age >= 18 ')) ~> filter1",
+				"derivedColumn1 filter(ERROR_FUNCTION('@equals(item().IsActive, __SINGLE_QUOTE__true__SINGLE_QUOTE__)__NEW_LINE_N__')) ~> filter1",
 				"cast1, locationdetails lookup({LocationID } == LocationID,",
 				"     multiple: false,",
 				"     pickup: 'any',",
