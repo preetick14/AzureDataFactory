@@ -62,6 +62,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "cast1"
 				}
 			],
 			"scriptLines": [
@@ -95,7 +98,7 @@
 				"     format: 'table') ~> customerpurchases",
 				"Personaldetails derive(Fullname = concat(FirstName, ' ', LastName) ) ~> derivedColumn1",
 				"derivedColumn1 filter(IsActive == true && Age >= 18 ) ~> filter1",
-				"filter1, locationdetails lookup({LocationID } == LocationID,",
+				"cast1, locationdetails lookup({LocationID } == LocationID,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
@@ -120,6 +123,10 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
 				"aggregate1 derive(TotalSpend = iif(TotalSpend > 5000, 'High Spender', iif(TotalSpend >= 1000, 'Medium Spender', 'Low Spender')) ) ~> derivedColumn2",
+				"filter1 cast(output(",
+				"          CustomerID as string 'integer'",
+				"     ),",
+				"     errors: true) ~> cast1",
 				"surrogateKey sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
