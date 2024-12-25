@@ -65,6 +65,9 @@
 				},
 				{
 					"name": "cast1"
+				},
+				{
+					"name": "cast2"
 				}
 			],
 			"scriptLines": [
@@ -97,8 +100,8 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> customerpurchases",
 				"Personaldetails derive(Fullname = concat(FirstName, ' ', LastName) ) ~> derivedColumn1",
-				"derivedColumn1 filter(ERROR_FUNCTION('@equals(item().IsActive, __SINGLE_QUOTE__true__SINGLE_QUOTE__)__NEW_LINE_N__')) ~> filter1",
-				"cast1, locationdetails lookup({LocationID } == LocationID,",
+				"cast2 filter(IsActive == true && Age >= 18 ) ~> filter1",
+				"cast1, locationdetails lookup(Age == LocationID,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
@@ -116,7 +119,7 @@
 				"sort1 select(mapColumn(",
 				"          CustomerID = Personaldetails@CustomerID,",
 				"          FullName = Fullname,",
-				"          Age,",
+				"          Age = Personaldetails@Age,",
 				"          Region,",
 				"          TotalSpend",
 				"     ),",
@@ -128,6 +131,11 @@
 				"          {LocationID } as integer '000'",
 				"     ),",
 				"     errors: true) ~> cast1",
+				"derivedColumn1 cast(output(",
+				"          Age as integer '000',",
+				"          IsActive as boolean",
+				"     ),",
+				"     errors: true) ~> cast2",
 				"surrogateKey sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
