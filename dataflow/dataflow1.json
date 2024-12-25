@@ -55,7 +55,13 @@
 					"name": "sort1"
 				},
 				{
-					"name": "surrogateKey1"
+					"name": "surrogateKey"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn2"
 				}
 			],
 			"scriptLines": [
@@ -95,16 +101,26 @@
 				"     broadcast: 'auto')~> lookup1",
 				"customerpurchases aggregate(groupBy(CustomerID),",
 				"     TotalSpend = sum(PurchaseAmount)) ~> aggregate1",
-				"lookup1, aggregate1 join(Personaldetails@CustomerID == aggregate1@CustomerID,",
+				"lookup1, derivedColumn2 join(Personaldetails@CustomerID == aggregate1@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> join1",
 				"join1 sort(asc(Fullname, true)) ~> sort1",
-				"sort1 keyGenerate(output(CustomerKey as long),",
+				"select1 keyGenerate(output(CustomerKey1 as long),",
 				"     startAt: 1L,",
-				"     stepValue: 1L) ~> surrogateKey1",
-				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     stepValue: 1L) ~> surrogateKey",
+				"sort1 select(mapColumn(",
+				"          CustomerID = Personaldetails@CustomerID,",
+				"          FullName = Fullname,",
+				"          Age,",
+				"          Region,",
+				"          TotalSpend",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"aggregate1 derive(TotalSpend = iif(TotalSpend > 5000, 'High Spender', iif(TotalSpend >= 1000, 'Medium Spender', 'Low Spender')) ) ~> derivedColumn2",
+				"surrogateKey sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     umask: 0022,",
