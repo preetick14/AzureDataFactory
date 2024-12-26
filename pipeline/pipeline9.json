@@ -85,20 +85,6 @@
 									"physicalType": "int",
 									"precision": 10
 								}
-							},
-							{
-								"sink": {
-									"name": "FileName",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"sink": {
-									"name": "ProcessedDate",
-									"type": "DateTime",
-									"physicalType": "datetime"
-								}
 							}
 						],
 						"typeConversion": true,
