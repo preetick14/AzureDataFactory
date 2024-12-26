@@ -174,10 +174,7 @@
 													},
 													"waitOnCompletion": true,
 													"parameters": {
-														"filename": {
-															"value": "@concat('large-', variables('currentfile'))",
-															"type": "Expression"
-														}
+														"filename": "@concat('large-', variables('currentfile'))"
 													}
 												}
 											}
