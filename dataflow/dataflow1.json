@@ -61,7 +61,7 @@
 					"name": "select1"
 				},
 				{
-					"name": "derivedColumn2"
+					"name": "CustomerSegment"
 				}
 			],
 			"scriptLines": [
@@ -94,14 +94,14 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> customerpurchases",
 				"Personaldetails derive(Fullname = concat(FirstName, ' ', LastName) ) ~> derivedColumn1",
-				"derivedColumn1 filter(ERROR_FUNCTION('equals(IsActive, true) && greaterOrEquals(Age, 18))')) ~> filter1",
+				"derivedColumn1 filter(equals(IsActive,true) && greaterOrEquals(Age,18)) ~> filter1",
 				"filter1, locationdetails lookup(Age == LocationID,",
 				"     multiple: false,",
 				"     pickup: 'any',",
 				"     broadcast: 'auto')~> lookup1",
 				"customerpurchases aggregate(groupBy(CustomerID),",
 				"     TotalSpend = sum(PurchaseAmount)) ~> aggregate1",
-				"lookup1, derivedColumn2 join(ERROR_FUNCTION('') == aggregate1@CustomerID,",
+				"lookup1, CustomerSegment join(Personaldetails@CustomerID == aggregate1@CustomerID,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -115,11 +115,12 @@
 				"          FullName = Fullname,",
 				"          Age = Personaldetails@Age,",
 				"          Region,",
-				"          TotalSpend",
+				"          TotalSpend,",
+				"          CustomerSegment",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"aggregate1 derive(TotalSpend = iif(TotalSpend > 5000, 'High Spender', iif(TotalSpend >= 1000, 'Medium Spender', 'Low Spender')) ) ~> derivedColumn2",
+				"aggregate1 derive(CustomerSegment = iif(TotalSpend > 5000, 'High Spender', iif(TotalSpend >= 1000, 'Medium Spender', 'Low Spender')) ) ~> CustomerSegment",
 				"surrogateKey sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
