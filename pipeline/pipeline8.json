@@ -180,7 +180,10 @@
 													},
 													"waitOnCompletion": true,
 													"parameters": {
-														"filename": "@concat('large-', variables('currentfile'))"
+														"filename": {
+															"value": "@variables('currentfile')",
+															"type": "Expression"
+														}
 													}
 												}
 											}
