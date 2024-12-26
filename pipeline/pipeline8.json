@@ -127,7 +127,7 @@
 													"waitOnCompletion": true,
 													"parameters": {
 														"filename": {
-															"value": "@variables('currentfile'))",
+															"value": "@variables('currentfile')",
 															"type": "Expression"
 														}
 													}
