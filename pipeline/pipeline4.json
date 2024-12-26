@@ -119,6 +119,9 @@
 			},
 			"isEnabled1": {
 				"type": "Integer"
+			},
+			"switch": {
+				"type": "String"
 			}
 		},
 		"annotations": []

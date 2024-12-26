@@ -1,5 +1,5 @@
 {
-	"name": "pipeline2",
+	"name": "Incremental data load multiple files",
 	"properties": {
 		"activities": [
 			{
