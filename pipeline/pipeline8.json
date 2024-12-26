@@ -126,10 +126,7 @@
 													},
 													"waitOnCompletion": true,
 													"parameters": {
-														"filename": {
-															"value": "@concat('small-', variables('currentfile'))",
-															"type": "Expression"
-														}
+														"filename": "@concat('small-', variables('currentfile'))"
 													}
 												}
 											}
