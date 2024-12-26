@@ -62,7 +62,32 @@
 									"physicalType": "int",
 									"precision": 10
 								}
-							}
+							},
+							{
+								"source": {
+									"name": "Name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "nvarchar",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Age ",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Age",
+									"type": "int",
+									"physicalType": "int",
+									"precision": 10
+								}
+							},
+							null,
+							null
 						],
 						"typeConversion": true,
 						"typeConversionSettings": {
