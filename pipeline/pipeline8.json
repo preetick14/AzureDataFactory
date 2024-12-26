@@ -150,10 +150,7 @@
 													},
 													"waitOnCompletion": true,
 													"parameters": {
-														"filename": {
-															"value": "@concat('medium-', variables('currentfile'))",
-															"type": "Expression"
-														}
+														"filename": "@concat('medium-', variables('currentfile'))"
 													}
 												}
 											}
