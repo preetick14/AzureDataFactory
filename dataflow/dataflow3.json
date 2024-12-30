@@ -5,9 +5,9 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "datafile",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
 					},
 					"name": "source1"
 				}
@@ -37,15 +37,18 @@
 				"     adlsPath as string,",
 				"     fileName as string",
 				"}",
-				"source(output(",
-				"          ID as integer,",
-				"          Name as string,",
-				"          Status as string,",
-				"          {Score } as integer",
-				"     ),",
+				"source(useSchema: false,",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> source1",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'delimited',",
+				"     fileSystem: 'parameterisation',",
+				"     folderPath: ($adlsPath),",
+				"     fileName: ($fileName),",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: false) ~> source1",
 				"derivedColumn1 filter(equals(Status,\"Active\")) ~> filter1",
 				"source1 derive(LoadDate = currentDate()) ~> derivedColumn1",
 				"filter1 alterRow(updateIf(true())) ~> alterRow1",
