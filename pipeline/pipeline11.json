@@ -199,6 +199,16 @@
 					"dataflow": {
 						"referenceName": "dataflow3",
 						"type": "DataFlowReference",
+						"parameters": {
+							"filename": {
+								"value": "'@{variables('filename')}'",
+								"type": "Expression"
+							},
+							"adlspath": {
+								"value": "'@{variables('filename')}'",
+								"type": "Expression"
+							}
+						},
 						"datasetParameters": {
 							"source1": {
 								"sourcePath": {
