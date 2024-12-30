@@ -8,10 +8,16 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
 		"AzureSqlDatabase2_password": {
+			"value": ""
+		},
+		"AzureSqlDatabase3_password": {
 			"value": ""
 		},
 		"FileServer1_password": {
@@ -20,8 +26,8 @@
 		"SqlServer1_password": {
 			"value": ""
 		},
-		"AzureDataLakeStorage1_accountKey": {
-			"value": ""
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://pckstorageaccount.dfs.core.windows.net/"
 		},
 		"AzureSqlDatabase1_properties_typeProperties_server": {
 			"value": "pcksqlserver.database.windows.net"
@@ -41,6 +47,15 @@
 		"AzureSqlDatabase2_properties_typeProperties_userName": {
 			"value": "pck"
 		},
+		"AzureSqlDatabase3_properties_typeProperties_server": {
+			"value": "@{linkedService().serverName}"
+		},
+		"AzureSqlDatabase3_properties_typeProperties_database": {
+			"value": "@{linkedService().databaseName}"
+		},
+		"AzureSqlDatabase3_properties_typeProperties_userName": {
+			"value": "pck"
+		},
 		"FileServer1_properties_typeProperties_host": {
 			"value": "//LAPTOP-5VQ2NFKL/SampleData"
 		},
@@ -55,9 +70,6 @@
 		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"value": "pck"
-		},
-		"AzureDataLakeStorage1_properties_typeProperties_url": {
-			"value": "https://pckstorageaccount.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"value": ""

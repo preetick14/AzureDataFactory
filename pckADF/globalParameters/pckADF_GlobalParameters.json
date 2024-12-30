@@ -1,1 +1,10 @@
-{}
+{
+	"Environment": {
+		"type": "string",
+		"value": "Production"
+	},
+	"FileFormat": {
+		"type": "string",
+		"value": "csv"
+	}
+}
