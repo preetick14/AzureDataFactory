@@ -1517,7 +1517,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/control flow task1')]",
+			"name": "[concat(parameters('factoryName'), '/control flow task1 enabled column')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
