@@ -1448,8 +1448,8 @@
 					],
 					"scriptLines": [
 						"parameters{",
-						"     filename as string,",
-						"     adlspath as string",
+						"     adlsPath as string,",
+						"     fileName as string",
 						"}",
 						"source(output(",
 						"          ID as integer,",

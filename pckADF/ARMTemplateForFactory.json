@@ -1090,11 +1090,11 @@
 								"referenceName": "dataflow3",
 								"type": "DataFlowReference",
 								"parameters": {
-									"filename": {
-										"value": "'@{variables('filename')}'",
+									"adlsPath": {
+										"value": "'@{variables('adlspath')}'",
 										"type": "Expression"
 									},
-									"adlspath": {
+									"fileName": {
 										"value": "'@{variables('filename')}'",
 										"type": "Expression"
 									}
@@ -2083,6 +2083,7 @@
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {
+					"schema": "dbo",
 					"table": {
 						"value": "@dataset().tableName",
 						"type": "Expression"
@@ -3014,8 +3015,8 @@
 					],
 					"scriptLines": [
 						"parameters{",
-						"     filename as string,",
-						"     adlspath as string",
+						"     adlsPath as string,",
+						"     fileName as string",
 						"}",
 						"source(output(",
 						"          ID as integer,",
