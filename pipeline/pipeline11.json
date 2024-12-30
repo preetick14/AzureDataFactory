@@ -200,11 +200,11 @@
 						"referenceName": "dataflow3",
 						"type": "DataFlowReference",
 						"parameters": {
-							"filename": {
-								"value": "'@{variables('filename')}'",
+							"adlsPath": {
+								"value": "'@{variables('adlspath')}'",
 								"type": "Expression"
 							},
-							"adlspath": {
+							"fileName": {
 								"value": "'@{variables('filename')}'",
 								"type": "Expression"
 							}
