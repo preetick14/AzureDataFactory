@@ -1,5 +1,5 @@
 {
-	"name": "pipeline11",
+	"name": "Parameters",
 	"properties": {
 		"activities": [
 			{
@@ -210,16 +210,6 @@
 							}
 						},
 						"datasetParameters": {
-							"source1": {
-								"sourcePath": {
-									"value": "@variables('adlspath')",
-									"type": "Expression"
-								},
-								"filename": {
-									"value": "@variables('filename')",
-									"type": "Expression"
-								}
-							},
 							"sink1": {
 								"tableName": {
 									"value": "@variables('tablename')",

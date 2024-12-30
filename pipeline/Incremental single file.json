@@ -1,5 +1,5 @@
 {
-	"name": "Incremental data load single file",
+	"name": "Incremental single file",
 	"properties": {
 		"activities": [
 			{
