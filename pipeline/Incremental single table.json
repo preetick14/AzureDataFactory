@@ -1,5 +1,5 @@
 {
-	"name": "Incremental single file",
+	"name": "Incremental single table",
 	"properties": {
 		"activities": [
 			{
