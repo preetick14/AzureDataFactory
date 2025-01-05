@@ -879,7 +879,6 @@
 					},
 					"mode": "Microbatch"
 				},
-				"status": "Stopped",
 				"allowVNetOverride": false
 			},
 			"dependsOn": []
