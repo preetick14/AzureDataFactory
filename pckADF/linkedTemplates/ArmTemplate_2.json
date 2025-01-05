@@ -13,6 +13,100 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Copy_Onpremises_to_Cloud')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Cust_ID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Cust_ID",
+											"type": "Int32",
+											"physicalType": "INT_32"
+										}
+									},
+									{
+										"source": {
+											"name": "Customer_Name",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Customer_Name",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "HR",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Parquet1",
+								"type": "DatasetReference",
+								"parameters": {
+									"outputfile": "HR"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Copy_csv_Blob_to_SQL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1254,6 +1348,155 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/scdtype2')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SalesRepSTG2",
+								"type": "DatasetReference"
+							},
+							"name": "SalesRepSTG2"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimSalesRep2",
+								"type": "DatasetReference"
+							},
+							"name": "DimSalesRep2"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DimSalesRep2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "DimSalesRep2",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "join1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "split1"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "alterRow1"
+						},
+						{
+							"name": "derivedColumn3"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          SalesRep_Number as integer,",
+						"          SalesRep_Name as string,",
+						"          SalesRep_Department as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> SalesRepSTG2",
+						"source(output(",
+						"          SalesRep_Key as integer,",
+						"          SalesRep_Number as integer,",
+						"          SalesRep_Name as string,",
+						"          SalesRep_Department as string,",
+						"          Current_Flag as integer,",
+						"          VerifyField as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> DimSalesRep2",
+						"SalesRepSTG2, DimSalesRep2 join(SalesRepSTG2@SalesRep_Number == DimSalesRep2@SalesRep_Number,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
+						"join1 derive(change_flag = iif(SalesRepSTG2@SalesRep_Name!=DimSalesRep2@SalesRep_Name||SalesRepSTG2@SalesRep_Department!=DimSalesRep2@SalesRep_Department,1,0)) ~> derivedColumn1",
+						"derivedColumn1 split(!isNull(DimSalesRep2@SalesRep_Number) && change_flag == 1,",
+						"     isNull(DimSalesRep2@SalesRep_Number) || change_flag == 1,",
+						"     disjoint: true) ~> split1@(ForUpdates, Forinserts)",
+						"split1@ForUpdates derive(Ncurrentflag = 0,",
+						"          Nverifyfield = 'Old') ~> derivedColumn2",
+						"derivedColumn2 alterRow(updateIf(true())) ~> alterRow1",
+						"split1@Forinserts derive(icurrentflag = 1,",
+						"          iverifyfield = 'New') ~> derivedColumn3",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          SalesRep_Key as integer,",
+						"          SalesRep_Number as integer,",
+						"          SalesRep_Name as string,",
+						"          SalesRep_Department as string,",
+						"          Current_Flag as integer,",
+						"          VerifyField as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['SalesRep_Number'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          SalesRep_Number = split1@ForUpdates@SalesRep_Number,",
+						"          Current_Flag = Ncurrentflag,",
+						"          VerifyField = Nverifyfield",
+						"     )) ~> sink1",
+						"derivedColumn3 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          SalesRep_Key as integer,",
+						"          SalesRep_Number as integer,",
+						"          SalesRep_Name as string,",
+						"          SalesRep_Department as string,",
+						"          Current_Flag as integer,",
+						"          VerifyField as string",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          SalesRep_Number = split1@Forinserts@SalesRep_Number,",
+						"          SalesRep_Name = split1@Forinserts@SalesRep_Name,",
+						"          SalesRep_Department = split1@Forinserts@SalesRep_Department,",
+						"          Current_Flag = icurrentflag,",
+						"          VerifyField = iverifyfield",
+						"     )) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Data flow task2')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1883,6 +2126,54 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/scdtype1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCD Type2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "scdtype2",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"SalesRepSTG2": {},
+									"DimSalesRep2": {},
+									"sink1": {},
+									"sink2": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/scdtype2')]"
 			]
 		},
 		{
