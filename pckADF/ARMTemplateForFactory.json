@@ -3492,7 +3492,7 @@
 					{
 						"SourceEntities": [
 							{
-								"name": "parameterisation/config",
+								"name": "parameterisation/sourcefolder",
 								"properties": {
 									"schema": [],
 									"dslConnectorProperties": [
@@ -3506,7 +3506,7 @@
 										},
 										{
 											"name": "folderPath",
-											"value": "config"
+											"value": "sourcefolder"
 										}
 									]
 								}
@@ -3531,7 +3531,7 @@
 								},
 								{
 									"name": "format",
-									"value": "json"
+									"value": "delimited"
 								},
 								{
 									"name": "dateFormats",
@@ -3607,8 +3607,20 @@
 									"value": true
 								},
 								{
-									"name": "documentForm",
-									"value": "documentPerLine"
+									"name": "columnNamesAsHeader",
+									"value": true
+								},
+								{
+									"name": "columnDelimiter",
+									"value": ","
+								},
+								{
+									"name": "quoteChar",
+									"value": "\\\""
+								},
+								{
+									"name": "escapeChar",
+									"value": "\\\\"
 								}
 							]
 						}
@@ -3653,14 +3665,14 @@
 								},
 								{
 									"name": "format",
-									"value": "parquet"
+									"value": "json"
 								}
 							]
 						},
 						"DataMapperMappings": [
 							{
 								"targetEntityName": "largedatasets",
-								"sourceEntityName": "parameterisation/config",
+								"sourceEntityName": "parameterisation/sourcefolder",
 								"sourceConnectionReference": {
 									"connectionName": "AzureBlobStorage1",
 									"type": "linkedservicetype"
@@ -3680,6 +3692,7 @@
 					},
 					"mode": "Microbatch"
 				},
+				"status": "Stopped",
 				"allowVNetOverride": false
 			},
 			"dependsOn": [
