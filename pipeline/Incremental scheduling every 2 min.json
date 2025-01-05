@@ -1,5 +1,5 @@
 {
-	"name": "pipeline3",
+	"name": "Incremental scheduling every 2 min",
 	"properties": {
 		"activities": [
 			{
