@@ -1,0 +1,111 @@
+{
+	"name": "scdtype1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SalesRepSTG",
+						"type": "DatasetReference"
+					},
+					"name": "SalesRepSTG"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimSalesRep",
+						"type": "DatasetReference"
+					},
+					"name": "DimSalesRep"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DimSalesRep",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimSalesRep",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "exists1"
+				},
+				{
+					"name": "exists2"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SalesRepSTG",
+				"source(output(",
+				"          SalesRep_Key as integer,",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DimSalesRep",
+				"SalesRepSTG, DimSalesRep exists(SalesRepSTG@SalesRep_Number == DimSalesRep@SalesRep_Number,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists1",
+				"SalesRepSTG, DimSalesRep exists(SalesRepSTG@SalesRep_Number == DimSalesRep@SalesRep_Number,",
+				"     negate:false,",
+				"     broadcast: 'auto')~> exists2",
+				"exists2 alterRow(updateIf(true())) ~> alterRow1",
+				"exists1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesRep_Key as integer,",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesRep_Key as integer,",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+			]
+		}
+	}
+}
