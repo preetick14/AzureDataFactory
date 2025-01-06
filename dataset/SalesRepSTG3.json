@@ -9,11 +9,6 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "SalesRep_Key",
-				"type": "int",
-				"precision": 10
-			},
-			{
 				"name": "SalesRep_Number",
 				"type": "int",
 				"precision": 10
@@ -24,15 +19,6 @@
 			},
 			{
 				"name": "SalesRep_Department",
-				"type": "varchar"
-			},
-			{
-				"name": "Current_Flag",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "VerifyField",
 				"type": "varchar"
 			}
 		],

@@ -1,0 +1,149 @@
+{
+	"name": "scdtype3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SalesRepSTG3",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimSalesRep3",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DimSalesRep3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DimSalesRep3",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "split1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "alterRow1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source(output(",
+				"          SalesRep_Key as integer,",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string,",
+				"          Old_Department as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source1, source2 join(source1@SalesRep_Number == source2@SalesRep_Number,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"select2 split(!isNull({d.SalesRep_Number}) && {s.SalesRep_Department} != {d.SalesRep_Department},",
+				"     isNull({d.SalesRep_Number}),",
+				"     disjoint: true) ~> split1@(ForUpdate, Forinsert)",
+				"split1@ForUpdate select(mapColumn(",
+				"          SalesRep_Number = {s.SalesRep_Number},",
+				"          SalesRep_Name = {s.SalesRep_Name},",
+				"          SalesRep_Department = {s.SalesRep_Department},",
+				"          Old_Department = {d.SalesRep_Department}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"join1 select(mapColumn(",
+				"          {s.SalesRep_Number} = source1@SalesRep_Number,",
+				"          {s.SalesRep_Name} = source1@SalesRep_Name,",
+				"          {s.SalesRep_Department} = source1@SalesRep_Department,",
+				"          SalesRep_Key,",
+				"          {d.SalesRep_Number} = source2@SalesRep_Number,",
+				"          {d.SalesRep_Name} = source2@SalesRep_Name,",
+				"          {d.SalesRep_Department} = source2@SalesRep_Department,",
+				"          {d.Old_Department} = Old_Department",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select1 alterRow(updateIf(true())) ~> alterRow1",
+				"split1@Forinsert sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesRep_Key as integer,",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string,",
+				"          Old_Department as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          SalesRep_Number = {s.SalesRep_Number},",
+				"          SalesRep_Name = {s.SalesRep_Name},",
+				"          SalesRep_Department = {s.SalesRep_Department},",
+				"          Old_Department = {d.Old_Department}",
+				"     )) ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesRep_Key as integer,",
+				"          SalesRep_Number as integer,",
+				"          SalesRep_Name as string,",
+				"          SalesRep_Department as string,",
+				"          Old_Department as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['SalesRep_Number'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+			]
+		}
+	}
+}

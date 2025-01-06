@@ -27,12 +27,7 @@
 				"type": "varchar"
 			},
 			{
-				"name": "Current_Flag",
-				"type": "int",
-				"precision": 10
-			},
-			{
-				"name": "VerifyField",
+				"name": "Old_Department",
 				"type": "varchar"
 			}
 		],
