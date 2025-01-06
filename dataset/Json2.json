@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "customer_data",
+				"fileName": "config",
 				"container": "customer-data"
 			}
 		},
