@@ -187,6 +187,18 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/c')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureSqlSourceTable')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -631,50 +643,6 @@
 				"typeProperties": {
 					"schema": "dbo",
 					"table": "Dim_SalesRep_SCD2"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DimSalesRep3')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "SalesRep_Key",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "SalesRep_Number",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "SalesRep_Name",
-						"type": "varchar"
-					},
-					{
-						"name": "SalesRep_Department",
-						"type": "varchar"
-					},
-					{
-						"name": "Old_Department",
-						"type": "varchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Dim_SalesRep_SCD3"
 				}
 			},
 			"dependsOn": [
